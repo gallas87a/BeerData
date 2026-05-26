@@ -1,4 +1,4 @@
-nr,bid,brewery,name,kind,link,abv,ibu,rating,nr_raters,adding_date,text
+nr,bid,brewery,name,kind,link,abv,ibu,rating,nr_raters,adding_date,text,malt,hops,chocolate,german,banana,vanilla,caramel,yeast,fruit,whiskey,rhum,alcohol,gluten,barrel,rye,barley,cocoa,small/lower,big/upper
 0,1059193,Thomas Menner 1701,"Félbarna, Altbier",Altbier - Sticke / Latzenbier,https://untappd.com/b/thomas-menner-1701-felbarna-altbier/1059193,6.2,N/A,3.59,235,04/24/15, ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 1,2587397,Guri Sörfőzde,Mélange,Altbier - Sticke / Latzenbier,https://untappd.com/b/guri-sorfozde-melange/2587397,6.0,N/A,3.53,226,04/05/18, ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 0,4635993,Tacet Brewery,Die Walküre,Altbier - Traditional,https://untappd.com/b/tacet-brewery-die-walkure/4635993,5.2,N/A,3.57,550,12/12/21, ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
