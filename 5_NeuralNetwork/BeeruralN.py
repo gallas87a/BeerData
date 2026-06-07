@@ -2,6 +2,10 @@ from difflib import SequenceMatcher
 import csv
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import os
+
+print(os.getcwd())
+print(os.listdir())
 
 beer_data=[]
 with open("..\\5_NeuralNetwork\\BeerData.csv","r",encoding="utf-8") as file:
