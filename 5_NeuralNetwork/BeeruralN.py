@@ -8,7 +8,7 @@ print(os.getcwd())
 print(os.listdir())
 
 beer_data=[]
-with open("..\\5_NeuralNetwork\\BeerData.csv","r",encoding="utf-8") as file:
+with open("5_NeuralNetwork\\BeerData.csv","r",encoding="utf-8") as file:
     reader = csv.reader(file)
     next(reader) # remove header
     for row in reader:
