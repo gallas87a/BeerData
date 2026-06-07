@@ -3,9 +3,7 @@ import csv
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import os
-
-print(os.getcwd())
-print(os.listdir())
+import streamlit as st
 
 beer_data=[]
 with open("/mount/src/beerdata/5_NeuralNetwork/BeerData.csv","r",encoding="utf-8") as file:
@@ -15,13 +13,13 @@ with open("/mount/src/beerdata/5_NeuralNetwork/BeerData.csv","r",encoding="utf-8
         beer_data.append(row)
 
 #get user beer preference
-pref_beer = input("Add meg a sör nevét: ")
+pref_beer = st.text_input("Add meg a sör nevét: ")
 
 best_sim=0
 count=0
 for i, text in enumerate(beer_data):
     if pref_beer.lower() == text[2].lower():
-        print(i,text[2],"Full matching of the beer name!!! \n")
+        st.write(i,text[2],"Full matching of the beer name!!! \n")
         count=1
         best_sim=1
         best_idx = i
@@ -37,17 +35,17 @@ for i, text in enumerate(beer_data):
             best_brewery=text[1]
     
 if (count==0 and best_sim<0.5) :     #0.5 is arbitrary
-    print("nem találtam a kiválasztott sört")
+    st.write("nem találtam a kiválasztott sört")
 else:
-    print(f"Index: {best_idx}")
-    print(f"Similarity: {best_sim:.3f}")
-    print(f"A kiválasztott sör neve: {best_text}")
-    print(f"A kiválasztott sör gyártója: {best_brewery}")
+    st.write(f"Index: {best_idx}")
+    st.write(f"Similarity: {best_sim:.3f}")
+    st.write(f"A kiválasztott sör neve: {best_text}")
+    st.write(f"A kiválasztott sör gyártója: {best_brewery}")
     pref_beer=best_text
     
 #CSV reading
 emb_data=[]
-with open("BeerEmbeddings.csv","r",encoding="utf-8") as file:
+with open("/mount/src/beerdata/5_NeuralNetwork/BeerEmbeddings.csv","r",encoding="utf-8") as file:
     reader = csv.reader(file)
     next(reader) # remove header
     for row in reader:
@@ -61,7 +59,7 @@ with open("BeerEmbeddings.csv","r",encoding="utf-8") as file:
     top_k = 5
     top_idx = np.argsort(similarities)[::-1] 
     top_idx = top_idx[top_idx != (best_idx)][:top_k]
-    print(top_idx,"\n")
+    st.write(top_idx,"\n")
     for i in top_idx:
-        print(i, similarities[i],beer_data[i])
-        print("\n")
+        st.write(i, similarities[i],beer_data[i])
+        st.write("\n")
