@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 beer_data=[]
-with open("BeerData.csv","r",encoding="utf-8") as file:
+with open("..\\5_NeuralNetwork\\BeerData.csv","r",encoding="utf-8") as file:
     reader = csv.reader(file)
     next(reader) # remove header
     for row in reader:
