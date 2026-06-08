@@ -5,12 +5,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 import streamlit as st
 
+streamlit_var = True
 if os.environ.get("OPENAI_API_KEY"):
-    streamlit = False
-    print(streamlit)
+    streamlit_var = False
+    print(streamlit_var)
     
 beer_data=[]
-if streamlit:
+if streamlit_var:
     csv_location = "/mount/src/beerdata/5_NeuralNetwork/"
 else:
     csv_location = ""
@@ -22,7 +23,7 @@ with open(csv_location+"BeerData.csv","r",encoding="utf-8") as file:
         beer_data.append(row)
 
 #get user beer preference
-if streamlit:
+if streamlit_var:
     pref_beer = st.text_input("Add meg a sör nevét: ")
 else:
     pref_beer = input("Add meg a sör nevét: ")
@@ -34,7 +35,7 @@ eq_beer=[]
 ids=[]
 for i, text in enumerate(beer_data):
     if pref_beer.lower() == text[2].lower():
-        if streamlit:
+        if streamlit_var:
             st.write(i,text[2],"Full matching of the beer name!!! \n")
         else:
             print(i,text[2],"Full matching of the beer name!!! \n")
@@ -72,12 +73,12 @@ for i, text in enumerate(beer_data):
             best_brewery=text[1]
 
 if (count==0 and best_sim<0.5) :     #0.5 is arbitrary
-    if streamlit:
+    if streamlit_var:
         st.write("nem találtam a kiválasztott sört")
     else:
         print("nem találtam a kiválasztott sört")
 else:
-    if streamlit:
+    if streamlit_var:
         st.write(f"Index: {best_idx}")
         st.write(f"Similarity: {best_sim:.3f}")
         st.write(f"A kiválasztott sör neve: {best_text}")
@@ -105,12 +106,12 @@ with open(csv_location+"BeerEmbeddings.csv","r",encoding="utf-8") as file:
     top_k = 5
     top_idx = np.argsort(similarities)[::-1] 
     top_idx = top_idx[top_idx != (best_idx)][:top_k]
-    if streamlit:
+    if streamlit_var:
         st.write(top_idx,"\n")
     else:
         print(top_idx,"\n")
     for i in top_idx:
-        if streamlit:
+        if streamlit_var:
             st.write(i, similarities[i],beer_data[i])
             st.write("\n")
         else:
