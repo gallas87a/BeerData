@@ -51,7 +51,10 @@ for i,eq in enumerate(eq_beer):
         print("Name fully matching with",i,eq, ids[i])
 while True:
     try:
-        choice = int(input("Choose a beer by entering the number: "))
+        if streamlit_var:
+            choice = int(st.number_input("Choose a beer by entering the number: "))
+        else:
+            choice = int(input("Choose a beer by entering the number: "))
         if 0 <= choice <= len(eq_beer)-1:
             break
         if streamlit_var:
