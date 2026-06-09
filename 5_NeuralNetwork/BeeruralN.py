@@ -27,6 +27,7 @@ if streamlit_var:
 else:
     pref_beer = input("Add meg a sör nevét: ")
 
+choice = 0
 best_sim=0
 count=0
 same=0
@@ -39,34 +40,37 @@ for i, text in enumerate(beer_data):
         eq_beer.append(text[1] + " : " + text[2])
         same=same+1
 
-if streamlit_var:
-    st.write("Please select which beer you wanted to choose!\n")
-else:
-    print("Please select which beer you wanted to choose!\n")
-
-for i,eq in enumerate(eq_beer):
+if same>1:
     if streamlit_var:
-        st.write("Name fully matching with",i,eq, ids[i])
+        st.write("Please select which beer you wanted to choose!\n")
     else:
-        print("Name fully matching with",i,eq, ids[i])
-while True:
-    try:
-        if streamlit_var:
-            choice = int(st.number_input("Choose a beer by entering the number: "))
-        else:
-            choice = int(input("Choose a beer by entering the number: "))
-        if 0 <= choice <= len(eq_beer)-1:
-            break
-        if streamlit_var:
-            st.write(f"Please enter a number between 0 and {len(eq_beer)-1}!")
-        else:
-            print(f"Please enter a number between 0 and {len(eq_beer)-1}!")
-    except ValueError:
-        if streamlit_var:
-            st.write("Please enter a valid integer!")
-        else:
-            print("Please enter a valid integer!")
+        print("Please select which beer you wanted to choose!\n")
 
+    for i,eq in enumerate(eq_beer):
+        if streamlit_var:
+            st.write("Name fully matching with",i,eq, ids[i])
+        else:
+            print("Name fully matching with",i,eq, ids[i])
+    while True:
+        try:
+            if streamlit_var:
+                choice = int(st.number_input("Choose a beer by entering the number: "))
+            else:
+                choice = int(input("Choose a beer by entering the number: "))
+            if 0 <= choice <= len(eq_beer)-1:
+                break
+            if streamlit_var:
+                st.write(f"Please enter a number between 0 and {len(eq_beer)-1}!")
+            else:
+                print(f"Please enter a number between 0 and {len(eq_beer)-1}!")
+        except ValueError:
+            if streamlit_var:
+                st.write("Please enter a valid integer!")
+            else:
+                print("Please enter a valid integer!")
+else:
+    choice=0
+    
 for i, text in enumerate(beer_data):
     if i==ids[choice]:
         best_text=text[2]
@@ -93,12 +97,12 @@ else:
         st.write(f"Index: {best_idx}")
         st.write(f"Similarity: {best_sim:.3f}")
         st.write(f"A kiválasztott sör neve: {best_text}")
-        st.write(f"A kiválasztott sör gyártója: {best_brewery}")
+        st.write(f"A kiválasztott sör gyártója: {best_brewery}\n")
     else:
         print(f"Index: {best_idx}")
         print(f"Similarity: {best_sim:.3f}")
         print(f"A kiválasztott sör neve: {best_text}")
-        print(f"A kiválasztott sör gyártója: {best_brewery}")
+        print(f"A kiválasztott sör gyártója: {best_brewery}\n")
     pref_beer=best_text
     
 #CSV reading
@@ -117,10 +121,7 @@ with open(csv_location+"BeerEmbeddings.csv","r",encoding="utf-8") as file:
     top_k = 5
     top_idx = np.argsort(similarities)[::-1] 
     top_idx = top_idx[top_idx != (best_idx)][:top_k]
-    if streamlit_var:
-        st.write(top_idx,"\n")
-    else:
-        print(top_idx,"\n")
+
     for i in top_idx:
         if streamlit_var:
             st.write(i, similarities[i],beer_data[i])
