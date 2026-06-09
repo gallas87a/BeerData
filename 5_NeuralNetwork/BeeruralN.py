@@ -70,13 +70,16 @@ if same>1:
                 print("Please enter a valid integer!")
 else:
     choice=0
-    
-for i, text in enumerate(beer_data):
-    if i==ids[choice]:
-        best_text=text[2]
-        best_brewery=text[1]
-        best_sim=1
-        best_idx = i
+
+if ids:
+    for i, text in enumerate(beer_data):
+        if i==ids[choice]:
+            best_text=text[2]
+            best_brewery=text[1]
+            best_sim=1
+            best_idx = i
+else:
+    pass #do nothing
 
 for i, text in enumerate(beer_data):    
     if count == 0:
