@@ -8,7 +8,6 @@ import streamlit as st
 streamlit_var = True
 if os.environ.get("OPENAI_API_KEY"):
     streamlit_var = False
-    print(streamlit_var)
     
 beer_data=[]
 if streamlit_var:
@@ -35,26 +34,35 @@ eq_beer=[]
 ids=[]
 for i, text in enumerate(beer_data):
     if pref_beer.lower() == text[2].lower():
-        if streamlit_var:
-            st.write(i,text[2],"Full matching of the beer name!!! \n")
-        else:
-            print(i,text[2],"Full matching of the beer name!!! \n")
         count=1
         ids.append(i)
         eq_beer.append(text[1] + " : " + text[2])
         same=same+1
 
-print("Please select which beer you wanted to choose!\n")
+if streamlit_var:
+    st.write("Please select which beer you wanted to choose!\n")
+else:
+    print("Please select which beer you wanted to choose!\n")
+
 for i,eq in enumerate(eq_beer):
-    print("Name fully matching with",i,eq, ids[i])
+    if streamlit_var:
+        st.write("Name fully matching with",i,eq, ids[i])
+    else:
+        print("Name fully matching with",i,eq, ids[i])
 while True:
     try:
         choice = int(input("Choose a beer by entering the number: "))
         if 0 <= choice <= len(eq_beer)-1:
             break
-        print(f"Please enter a number between 0 and {len(eq_beer)-1}.")
+        if streamlit_var:
+            st.write(f"Please enter a number between 0 and {len(eq_beer)-1}!")
+        else:
+            print(f"Please enter a number between 0 and {len(eq_beer)-1}!")
     except ValueError:
-        print("Please enter a valid integer.")
+        if streamlit_var:
+            st.write("Please enter a valid integer!")
+        else:
+            print("Please enter a valid integer!")
 
 for i, text in enumerate(beer_data):
     if i==ids[choice]:
