@@ -18,8 +18,7 @@ def read_csvs(csv_location):
 
         with open(filename, "r", encoding="utf-8") as file:
             reader = csv.reader(file)
-            # Ha VAN fejléc:
-            next(reader)
+            next(reader) #header elimination
             for row in reader:
                 emb_data.append(row)
         i += 1
@@ -48,9 +47,9 @@ with open(csv_location+"BeerData.csv","r",encoding="utf-8") as file:
 
 #get user beer preference
 if streamlit_var:
-    pref_beer = st.text_input("Add meg a sör nevét: ")
+    pref_beer = st.text_input("Please provide the name of the name of the beer: ")
 else:
-    pref_beer = input("Add meg a sör nevét: ")
+    pref_beer = input("Please provide the name of the name of the beer: ")
 
 choice = 0
 best_sim=0
@@ -106,6 +105,24 @@ if ids:
 else:
     pass #do nothing
 
+while True:
+    try:
+        if streamlit_var:
+            top_k = int(st.input("How many similar beers you want to see: "))
+        else:
+            top_k = int(input("How many similar beers you want to see: "))
+        if 5 <= top_k <= 20: #arbitrary maximized in 20
+            break
+        if streamlit_var:
+            st.write(f"Please enter a number between 5 and 20!")
+        else:
+            print(f"Please enter a number between 5 and 20!")
+    except ValueError:
+        if streamlit_var:
+            st.write("Please enter a valid integer!")
+        else:
+            print("Please enter a valid integer!")
+
 for i, text in enumerate(beer_data):    
     if count == 0:
         sim = SequenceMatcher(None, text[2].lower(), pref_beer.lower()).ratio()  
@@ -117,20 +134,20 @@ for i, text in enumerate(beer_data):
 
 if (count==0 and best_sim<0.5) :     #0.5 is arbitrary
     if streamlit_var:
-        st.write("nem találtam a kiválasztott sört")
+        st.write("I cannot find the choosen beer!")
     else:
-        print("nem találtam a kiválasztott sört")
+        print("I cannot find the choosen beer!")
 else:
     if streamlit_var:
         st.write(f"Index: {best_idx}")
         st.write(f"Similarity: {best_sim:.3f}")
-        st.write(f"A kiválasztott sör neve: {best_text}")
-        st.write(f"A kiválasztott sör gyártója: {best_brewery}\n")
+        st.write(f"The name of the choosen beer: {best_text}")
+        st.write(f"Brewery of the choosen beer: {best_brewery}\n")
     else:
         print(f"Index: {best_idx}")
         print(f"Similarity: {best_sim:.3f}")
-        print(f"A kiválasztott sör neve: {best_text}")
-        print(f"A kiválasztott sör gyártója: {best_brewery}\n")
+        print(f"The name of the choosen beer: {best_text}")
+        print(f"Brewery of the choosen beer: {best_brewery}\n")
     pref_beer=best_text
     
 #CSV reading
@@ -142,7 +159,7 @@ emb_data = np.array(emb_data, dtype=np.float32) #necessary conversion
 
 pref = emb_data[best_idx].reshape(1, -1)
 similarities = cosine_similarity(pref, emb_data)[0]
-top_k = 5
+
 top_idx = np.argsort(similarities)[::-1] 
 top_idx = top_idx[top_idx != (best_idx)][:top_k]
 
