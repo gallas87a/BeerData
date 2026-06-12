@@ -5,6 +5,31 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 import streamlit as st
 
+def read_csvs(csv_location):
+    i = 1
+
+    while True:
+        filename = os.path.join(csv_location, f"BeerEmbeddings{i}.csv")
+
+        if not os.path.exists(filename):
+            break
+
+        print(f"Reading {filename}")
+
+        with open(filename, "r", encoding="utf-8") as file:
+            reader = csv.reader(file)
+            # Ha VAN fejléc:
+            next(reader)
+            for row in reader:
+                emb_data.append(row)
+        i += 1
+    if streamlit_var:
+        st.write(f"Loaded {len(emb_data)} rows from {i-1} files.")
+    else:
+        print(f"Loaded {len(emb_data)} rows from {i-1} files.")
+    
+    return emb_data
+
 streamlit_var = True
 if os.environ.get("OPENAI_API_KEY"):
     streamlit_var = False
@@ -110,25 +135,21 @@ else:
     
 #CSV reading
 emb_data=[]
-with open(csv_location+"BeerEmbeddings.csv","r",encoding="utf-8") as file:
-    reader = csv.reader(file)
-    next(reader) # remove header
-    for row in reader:
-        emb_data.append(row)
+emb_data = read_csvs(csv_location)
     
-    #cosine similarity
-    emb_data = np.array(emb_data, dtype=np.float32) #necessary conversion
-    
-    pref = emb_data[best_idx].reshape(1, -1)
-    similarities = cosine_similarity(pref, emb_data)[0]
-    top_k = 5
-    top_idx = np.argsort(similarities)[::-1] 
-    top_idx = top_idx[top_idx != (best_idx)][:top_k]
+#cosine similarity
+emb_data = np.array(emb_data, dtype=np.float32) #necessary conversion
 
-    for i in top_idx:
-        if streamlit_var:
-            st.write(i, similarities[i],beer_data[i])
-            st.write("\n")
-        else:
-            print(i, similarities[i],beer_data[i])
-            print("\n")
+pref = emb_data[best_idx].reshape(1, -1)
+similarities = cosine_similarity(pref, emb_data)[0]
+top_k = 5
+top_idx = np.argsort(similarities)[::-1] 
+top_idx = top_idx[top_idx != (best_idx)][:top_k]
+
+for i in top_idx:
+    if streamlit_var:
+        st.write(i, similarities[i],beer_data[i])
+        st.write("\n")
+    else:
+        print(i, similarities[i],beer_data[i])
+        print("\n")
