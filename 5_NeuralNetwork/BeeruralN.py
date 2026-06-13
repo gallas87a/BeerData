@@ -108,7 +108,12 @@ else:
 while True:
     try:
         if streamlit_var:
-            top_k = int(st.input("How many similar beers you want to see: "))
+            top_k = st.number_input(
+                "How many similar beers you want to see:",
+                min_value=5,
+                max_value=20,
+                value=10
+            )
         else:
             top_k = int(input("How many similar beers you want to see: "))
         if 5 <= top_k <= 20: #arbitrary maximized in 20
