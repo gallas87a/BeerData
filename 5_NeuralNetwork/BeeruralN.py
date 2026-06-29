@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import os
 import streamlit as st
+from rapidfuzz import fuzz
 
 def read_csvs(csv_location):
     i = 1
@@ -47,9 +48,12 @@ with open(csv_location+"BeerData.csv","r",encoding="utf-8") as file:
 
 #get user beer preference
 if streamlit_var:
-    pref_beer = st.text_input("Please provide the name of the name of the beer: ")
+    pref_beer = st.text_input("Please provide the name of the name of the beer and the name of the brewery (format: BEER;BREWERY): ")
 else:
-    pref_beer = input("Please provide the name of the name of the beer: ")
+    pref_beer = input("Please provide the name of the name of the beer and the name of the brewery (format: BEER;BREWERY): ")
+
+pref_beer,pref_brewery = pref_beer.split(";")
+print(pref_beer,"\n",pref_brewery) 
 
 choice = 0
 best_sim=0
@@ -57,12 +61,39 @@ count=0
 same=0
 eq_beer=[]
 ids=[]
+#look up for brewery
 for i, text in enumerate(beer_data):
-    if pref_beer.lower() == text[2].lower():
+    #exact brewery match
+    if pref_brewery.lower() == text[1].lower():
+        best_sim = 100
+        best_brewery = text[1]
+        if streamlit_var:
+            st.write("Selected brewery is: ",text[1].lower())
+        else:
+            print("Selected brewery is: ",text[1].lower())
+#iterate accross all breweries to found a similar one
+if best_sim !=100:
+    for j, text in enumerate(beer_data):
+        sim = fuzz.ratio(text[1], pref_brewery)
+        if sim > best_sim:
+            best_sim = sim
+            best_brewery = text[1]
+if streamlit_var:
+    st.write("Selected brewery is:", best_brewery)
+    st.write("Matching rate (similarity) is:", best_sim,"[%]")
+else:
+    print("Selected brewery is:", best_brewery)
+    print("Matching rate (similarity) is:", best_sim,"[%]")
+
+#beer name matching
+for i, text in enumerate(beer_data):
+    if ((text[1].lower() == best_brewery) and (pref_beer.lower() == text[2].lower())):
         count=1
         ids.append(i)
         eq_beer.append(text[1] + " : " + text[2])
         same=same+1
+    else:
+        pass #do nothing
 
 if same>1:
     if streamlit_var:
@@ -95,6 +126,7 @@ if same>1:
 else:
     choice=0
 
+best_sim=0
 if ids:
     for i, text in enumerate(beer_data):
         if i==ids[choice]:
