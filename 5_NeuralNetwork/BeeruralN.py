@@ -15,7 +15,7 @@ def read_csvs(csv_location):
         if not os.path.exists(filename):
             break
 
-        print(f"Reading {filename}")
+        #print(f"Reading {filename}")
 
         with open(filename, "r", encoding="utf-8") as file:
             reader = csv.reader(file)
@@ -47,13 +47,25 @@ with open(csv_location+"BeerData.csv","r",encoding="utf-8") as file:
         beer_data.append(row)
 
 #get user beer preference
-if streamlit_var:
-    pref_beer = st.text_input("Please provide the name of the name of the beer and the name of the brewery (format: BEER;BREWERY): ")
-else:
-    pref_beer = input("Please provide the name of the name of the beer and the name of the brewery (format: BEER;BREWERY): ")
-
-pref_beer,pref_brewery = pref_beer.split(";")
-print(pref_beer,"\n",pref_brewery) 
+while True:
+    if streamlit_var:
+        pref_beer = st.text_input("Please provide the name of the name of the beer and the name of the brewery (format: BEER;BREWERY): ")
+    else:
+        pref_beer = input("Please provide the name of the name of the beer and the name of the brewery (format: BEER;BREWERY): ")
+    try:
+        pref_beer,pref_brewery = pref_beer.split(";")
+        if streamlit_var:
+            st.write("The entered beer name is:",pref_beer)
+            st.write("The entered brewery name is:",pref_brewery)
+        else:
+            print("The entered beer name is:",pref_beer)
+            print("The entered brewery name is:",pref_brewery)
+        break
+    except ValueError:
+        if streamlit_var:
+            st.write("Please use ';' as separator and use the format: BEER;BREWERY")
+        else:
+            print("Please use ';' as separator and use the format: BEER;BREWERY")    
 
 choice = 0
 best_sim=0
@@ -160,6 +172,9 @@ while True:
         else:
             print("Please enter a valid integer!")
 
+#EZMÉGNEMJÓ mert a sör nevét nézi és sequence matcherrel!!!
+sim=0
+best_sim=0
 for i, text in enumerate(beer_data):    
     if count == 0:
         sim = SequenceMatcher(None, text[2].lower(), pref_beer.lower()).ratio()  
