@@ -79,23 +79,20 @@ for i, text in enumerate(beer_data):
     if pref_brewery.lower() == text[1].lower():
         best_sim = 100
         best_brewery = text[1]
-        if streamlit_var:
-            st.write("Selected brewery is: ",text[1].lower())
-        else:
-            print("Selected brewery is: ",text[1].lower())
+        
 #iterate accross all breweries to found a similar one
 if best_sim !=100:
     for j, text in enumerate(beer_data):
-        sim = fuzz.ratio(text[1], pref_brewery)
+        sim = fuzz.ratio(text[1].lower(), pref_brewery.lower())
         if sim > best_sim:
             best_sim = sim
             best_brewery = text[1]
 if streamlit_var:
     st.write("Selected brewery is:", best_brewery)
-    st.write("Matching rate (similarity) is:", best_sim,"[%]")
+    st.write("Matching rate (similarity) for brewery is:", best_sim,"[%]")
 else:
     print("Selected brewery is:", best_brewery)
-    print("Matching rate (similarity) is:", best_sim,"[%]")
+    print("Matching rate (similarity) for brewery is:", best_sim,"[%]")
 
 #beer name matching
 for i, text in enumerate(beer_data):
@@ -172,17 +169,18 @@ while True:
         else:
             print("Please enter a valid integer!")
 
-#EZMÉGNEMJÓ mert a sör nevét nézi és sequence matcherrel!!!
+#beer name similarity amongst the beers of the same brewery
 sim=0
 best_sim=0
 for i, text in enumerate(beer_data):    
     if count == 0:
-        sim = SequenceMatcher(None, text[2].lower(), pref_beer.lower()).ratio()  
-        if sim > best_sim:
-            best_sim = sim
-            best_idx = i
-            best_text=text[2]
-            best_brewery=text[1]
+        if text[1].lower() == best_brewery.lower():
+            sim = fuzz.ratio(text[2].lower(), pref_beer.lower())
+            #sim = SequenceMatcher(None, text[2].lower(), pref_beer.lower()).ratio()  
+            if sim > best_sim:
+                best_sim = sim
+                best_idx = i
+                best_text=text[2]
 
 if (count==0 and best_sim<0.5) :     #0.5 is arbitrary
     if streamlit_var:
@@ -192,7 +190,7 @@ if (count==0 and best_sim<0.5) :     #0.5 is arbitrary
 else:
     if streamlit_var:
         st.write(f"Index: {best_idx}")
-        st.write(f"Similarity: {best_sim:.3f}")
+        st.write(f"Similarity: {best_sim:.3f} [%]")
         st.write(f"The name of the choosen beer: {best_text}")
         st.write(f"Brewery of the choosen beer: {best_brewery}\n")
     else:
@@ -200,7 +198,6 @@ else:
         print(f"Similarity: {best_sim:.3f}")
         print(f"The name of the choosen beer: {best_text}")
         print(f"Brewery of the choosen beer: {best_brewery}\n")
-    pref_beer=best_text
     
 #CSV reading
 emb_data=[]
