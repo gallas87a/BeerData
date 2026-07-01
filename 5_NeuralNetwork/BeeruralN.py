@@ -180,7 +180,8 @@ for i, text in enumerate(beer_data):
             if sim > best_sim:
                 best_sim = sim
                 best_idx = i
-                best_text=text[2]
+                best_beer=text[2]
+                best_text=text[0]
 
 if (count==0 and best_sim<0.5) :     #0.5 is arbitrary
     if streamlit_var:
@@ -191,13 +192,15 @@ else:
     if streamlit_var:
         st.write(f"Index: {best_idx}")
         st.write(f"Similarity: {best_sim:.3f} [%]")
-        st.write(f"The name of the choosen beer: {best_text}")
-        st.write(f"Brewery of the choosen beer: {best_brewery}\n")
+        st.write(f"The name of the choosen beer: {best_beer}")
+        st.write(f"Brewery of the choosen beer: {best_brewery}")
+        st.write(f"Description of the choosen beer: {best_text}\n----------------------------------------------------\n")
     else:
         print(f"Index: {best_idx}")
         print(f"Similarity: {best_sim:.3f}")
-        print(f"The name of the choosen beer: {best_text}")
-        print(f"Brewery of the choosen beer: {best_brewery}\n")
+        print(f"The name of the choosen beer: {best_beer}")
+        print(f"Brewery of the choosen beer: {best_brewery}")
+        print(f"Description of the choosen beer: {best_text}\n----------------------------------------------------\n")
     
 #CSV reading
 emb_data=[]
