@@ -215,10 +215,18 @@ similarities = cosine_similarity(pref, emb_data)[0]
 top_idx = np.argsort(similarities)[::-1] 
 top_idx = top_idx[top_idx != (best_idx)][:top_k]
 
-for i in top_idx:
-    if streamlit_var:
-        st.write(i, similarities[i],beer_data[i])
-        st.write("\n")
-    else:
-        print(i, similarities[i],beer_data[i])
-        print("\n")
+if streamlit_var:
+    st.write("ID, \tsimilarity rating ,\tBeer Name, \tBrewery Name, \tBeer Description")
+    st.write("-------------------------------------------------------------------------------")
+else:
+    print("ID, \tsimilarity rating ,\tBeer Name, \tBrewery Name, \tBeer Description")
+    print("---------------------------------------------------------------------------------")
+
+for i, text in enumerate(beer_data):
+    if i in top_idx:
+        if streamlit_var:
+            st.write(i, similarities[i],text[2], text[1], text[0],sep="\t")
+            st.write("\n")
+        else:
+            print(i, similarities[i],text[2], text[1], text[0],sep="\t")
+            print("\n")
