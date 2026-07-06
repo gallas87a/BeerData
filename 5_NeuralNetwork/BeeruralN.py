@@ -194,7 +194,7 @@ else:
         st.write(f"Similarity: {best_sim:.3f} [%]")
         st.write(f"The name of the choosen beer: {best_beer}")
         st.write(f"Brewery of the choosen beer: {best_brewery}")
-        st.write(f"Description of the choosen beer: {best_text}\n----------------------------------------------------\n")
+        st.write(f"Description of the choosen beer: {best_text}")
     else:
         print(f"Index: {best_idx}")
         print(f"Similarity: {best_sim:.3f}")
