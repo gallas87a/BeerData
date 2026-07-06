@@ -225,7 +225,7 @@ else:
 for i, text in enumerate(beer_data):
     if i in top_idx:
         if streamlit_var:
-            st.write(i, similarities[i],text[2], text[1], text[0],sep="\t")
+            st.write(f"{i}\t{similarities[i]:.4f}\t{text[2]}\t{text[1]}\t{text[0]}")
             st.write("\n")
         else:
             print(i, similarities[i],text[2], text[1], text[0],sep="\t")
